@@ -1,18 +1,19 @@
 、<template>
   <div class="login-container">
     <div class="logo" />
+
     <div class="form">
       <h1>登录</h1>
       <el-card shadow="never" class="login-card">
         <!--登录表单-->
-        <el-form ref="loginForm" :model="loginForm" :rules="rules">
+        <el-form ref="loginForm" :model="loginForm" :rules="loginRules">
           <!-- 手机号 -->
           <el-form-item prop="mobile">
             <el-input v-model="loginForm.mobile" placeholder="请输入账号" />
           </el-form-item>
           <!-- 密码 -->
           <el-form-item prop="password">
-            <el-input v-model="loginForm.password" placeholder="请输入密码" type="password" show-password />
+            <el-input v-model="loginForm.password" placeholder="请输入密码" show-password />
           </el-form-item>
           <!-- 协议 -->
           <el-form-item prop="isAgree">
@@ -38,7 +39,7 @@ export default {
         isAgree: false
       },
       // 表单校验规则 注意：规则的名字要和表单的命名相同
-      rules: {
+      loginRules: {
         mobile: [
           { required: true, message: '请输入手机号', trigger: 'blur' },
           { pattern: /^(?:(?:\+|00)86)?1\d{10}$/, message: '手机号格式不正确', trigger: 'blur' }
@@ -55,7 +56,7 @@ export default {
             // value检查的数据 false/true
             // callback 函数 执行这个函数
             // 成功执行callback 失败也执行 回复错误信息
-            value ? callback() : callback(new Error('请勾选协议'))
+            value ? callback() : callback(new Error('请勾选平台用户协议'))
           }
         }]
       }
