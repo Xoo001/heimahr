@@ -69,7 +69,8 @@ export default {
       // 验证数据
       this.$refs.loginForm.validate(isOk => {
         if (isOk) {
-          console.log('通过')
+          // 调用vuex里的方法
+          this.$store.dispatch('user/login', this.loginForm)
         }
       })
     }
