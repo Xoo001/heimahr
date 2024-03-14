@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-container">
-    <div class="dashboard-text">name: {{ name }}</div>
+    <div class="dashboard-text">name:</div>
     <!-- 使用svg-icon组件 -->
     <!-- 设置一个iconClass的属性 = 文件名《注意：没有后缀》 -->
     <svg-icon icon-class="link" />
@@ -9,18 +9,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
 export default {
   name: 'Dashboard',
+  data() {
+    return {
+    }
+  },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
+    ...mapGetters(['name'])
   }
-  // created() {
-  //   // 调用vuex中的action
-  //   this.$store.dispatch('user/getUserInfo')
-  // }
 }
 </script>
 
