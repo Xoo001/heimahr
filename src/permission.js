@@ -9,7 +9,7 @@ const whileList = ['/login', '/404']
 /**
  * 前置守卫
  */
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   nprogress.start()
   if (store.getters.token) {
     // 我去的页面是否是登录页
@@ -20,6 +20,12 @@ router.beforeEach((to, from, next) => {
       nprogress.done()
     } else {
       // 如果不是登录页放行
+      // 获取用户信息：是否获取过
+      if (!store.getters.userInfo) {
+        // console.log('没有获取')
+        // 获取用户信息
+        await store.dispatch('user/getUserInfo')
+      }
       next()
     }
   } else {

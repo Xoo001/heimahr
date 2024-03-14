@@ -17,6 +17,10 @@ export default {
       'name'
     ])
   }
+  // created() {
+  //   // 调用vuex中的action
+  //   this.$store.dispatch('user/getUserInfo')
+  // }
 }
 </script>
 
