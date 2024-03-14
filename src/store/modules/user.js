@@ -1,5 +1,5 @@
 import { getToken, setToken, removeToken } from '@/utils/auth'
-import request from '@/utils/request'
+import { login } from '@/api/user'
 
 const state = {
   token: getToken() // 缓存读取初始值
@@ -27,11 +27,11 @@ const actions = {
   async login(context, data) {
     // console.log(data)
     // todo：调用接口
-    const res = await request.post('/sys/login', data)
-    console.log(res)
+    const token = await login(data)
+    // console.log(token)
     // 返回一个token 1234
-    // commit 提交 调用setToken方法
-    context.commit('setToken', '123456')
+    // commit 提交 调用setToken方法保存token
+    context.commit('setToken', token)
   }
 }
 

@@ -34,9 +34,9 @@ export default {
   data() {
     return {
       loginForm: {
-        mobile: '',
-        password: '',
-        isAgree: false
+        mobile: process.env.NODE_ENV === 'development' ? '13800000002' : '',
+        password: process.env.NODE_ENV === 'development' ? 'hm#qd@23!' : '',
+        isAgree: process.env.NODE_ENV === 'development'
       },
       // 表单校验规则 注意：规则的名字要和表单的命名相同
       loginRules: {
@@ -67,10 +67,16 @@ export default {
     // 登录提交表单验证
     submitForm() {
       // 验证数据
-      this.$refs.loginForm.validate(isOk => {
+      this.$refs.loginForm.validate(async isOk => {
         if (isOk) {
           // 调用vuex里的方法
-          this.$store.dispatch('user/login', this.loginForm)
+          await this.$store.dispatch('user/login', this.loginForm)
+          // 跳转到首页
+          this.$message({
+            message: '登陆成功',
+            type: 'success'
+          })
+          this.$router.push('/')
         }
       })
     }
