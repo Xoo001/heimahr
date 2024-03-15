@@ -23,7 +23,8 @@
           <a target="_blank" href="https://github.com/Xoo001/heimahr">
             <el-dropdown-item>项目地址</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
+          <!-- 用prevent组织默认时间 -->
+          <a @click.prevent="uploadPassword">
             <el-dropdown-item>修改密码</el-dropdown-item>
           </a>
           <!-- native事件的修饰符：注册组件的根元素的原生时间 -->
@@ -33,6 +34,25 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!-- dialog  sync可以接收子组件传过来的事件和值 -->
+    <el-dialog append-to-body width="500px" title="修改密码" :visible.sync="showDialog">
+      <!-- form表单 -->
+      <el-form ref="passwordForm" :model="passwordForm" :rules="rules" label-width="120px">
+        <el-form-item label="旧密码" prop="oldPassword">
+          <el-input v-model="passwordForm.oldPassword" show-password size="small" />
+        </el-form-item>
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="passwordForm.newPassword" show-password size="small" />
+        </el-form-item>
+        <el-form-item label="重置密码" prop="twicePassword">
+          <el-input v-model="passwordForm.twicePassword" show-password size="small" />
+        </el-form-item>
+        <el-form-item>
+          <el-button size="mini" type="primary" @click="submitForm">确认修改</el-button>
+          <el-button size="mini">取消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,6 +66,35 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    const theSame = (rule, value, callback) => {
+      // 自定义规则：两次密码相同
+      value === this.passwordForm.newPassword ? callback() : callback(new Error('两次密码不一致'))
+    }
+    return {
+      showDialog: false,
+      // 重置密码表单
+      passwordForm: {
+        oldPassword: '',
+        newPassword: '',
+        twicePassword: ''
+      },
+      // 表单验证规则
+      rules: {
+        oldPassword: [
+          { required: true, message: '旧密码不能为空', trigger: 'blur' }
+        ],
+        newPassword: [
+          { required: true, message: '新密码不能为空', trigger: 'blur' },
+          { min: 6, max: 16, message: '请输入6-16位之间', trigger: 'blur' }
+        ],
+        twicePassword: [
+          { required: true, message: '重置密码不能为空', trigger: 'blur' },
+          { validator: theSame, trigger: 'blur' }
+        ]
+      }
+    }
+  },
   computed: {
     ...mapGetters([
       'sidebar',
@@ -57,10 +106,27 @@ export default {
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
+
     async logout() {
       // 调用退出登录action
       await this.$store.dispatch('user/logout')
       this.$router.push('/login')
+    },
+
+    // 重置密码
+    uploadPassword() {
+      this.showDialog = true
+    },
+
+    // 提交重置密码
+    submitForm() {
+      this.$refs.passwordForm.validate(isOk => {
+        // console.log(isOk)
+        // 表单验证通过：提交调用接口
+        if (isOk) {
+          console.log(1)
+        }
+      })
     }
   }
 }
