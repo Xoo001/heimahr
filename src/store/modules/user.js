@@ -15,7 +15,7 @@ const mutations = {
   },
 
   // 删除token
-  removeToken() {
+  removeToken(state) {
     // 删除vuex的token
     state.token = null
     // 删除缓存
@@ -46,6 +46,14 @@ const actions = {
     // todo:调用用户资料接口
     const result = await getUserInfo()
     context.commit('setUserInfo', result)
+  },
+
+  // 退出
+  logout(context) {
+    // 删除token
+    context.commit('removeToken')
+    // 删除用户信息
+    context.commit('setUserInfo', null)
   }
 }
 

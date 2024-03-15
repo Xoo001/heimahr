@@ -1,3 +1,4 @@
+import router from '@/router'
 import store from '@/store'
 import axios from 'axios'
 import { Message } from 'element-ui'
@@ -31,10 +32,21 @@ service.interceptors.response.use(function(response) {
     Message.error(message)
     return Promise.reject(new Error(message))
   }
-}, function(error) {
+}, async function(error) {
+  // debugger
   // 超出 2xx 范围的状态码都会触发该函数。
-  Message.error(error.message)
+  // console.log(error.response.status)
+  if (error.response.status === 401) {
+    // 退出登陆 删除token 调用action方法
+    await store.dispatch('user/logout')
+    // 跳转登录页
+    router.push('/login')
+    // 提示登录过期
+    Message.error('登录已过期，请重新登录')
+    return Promise.reject(error)
+  }
   // 对响应错误做点什么
+  Message.error(error.message)
   return Promise.reject(error)
 })
 
