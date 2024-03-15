@@ -21,7 +21,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // 如果不是登录页放行
       // 获取用户信息：是否获取过
-      if (!store.getters.userInfo) {
+      if (!store.getters.userId) {
         // console.log('没有获取')
         // 获取用户信息
         await store.dispatch('user/getUserInfo')

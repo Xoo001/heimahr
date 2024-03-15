@@ -3,7 +3,7 @@ import { login, getUserInfo } from '@/api/user'
 
 const state = {
   token: getToken(), // 缓存读取初始值
-  userInfo: null
+  userInfo: {}
 }
 
 const mutations = {
@@ -53,7 +53,7 @@ const actions = {
     // 删除token
     context.commit('removeToken')
     // 删除用户信息
-    context.commit('setUserInfo', null)
+    context.commit('setUserInfo', {})
   }
 }
 
