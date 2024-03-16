@@ -35,7 +35,7 @@
       </el-dropdown>
     </div>
     <!-- dialog  sync可以接收子组件传过来的事件和值 -->
-    <el-dialog append-to-body width="500px" title="修改密码" :visible.sync="showDialog">
+    <el-dialog append-to-body width="500px" title="修改密码" :visible.sync="showDialog" @close="cancelForm">
       <!-- form表单 -->
       <el-form ref="passwordForm" :model="passwordForm" :rules="rules" label-width="120px">
         <el-form-item label="旧密码" prop="oldPassword">
@@ -49,7 +49,7 @@
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="submitForm">确认修改</el-button>
-          <el-button size="mini">取消</el-button>
+          <el-button size="mini" @click="cancelForm">取消</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -60,6 +60,7 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import { uploadPassword } from '@/api/user'
 
 export default {
   components: {
@@ -120,13 +121,24 @@ export default {
 
     // 提交重置密码
     submitForm() {
-      this.$refs.passwordForm.validate(isOk => {
+      this.$refs.passwordForm.validate(async isOk => {
         // console.log(isOk)
         // 表单验证通过：提交调用接口
         if (isOk) {
-          console.log(1)
+          // 调用接口
+          await uploadPassword(this.passwordForm)
+          // 修改成功
+          this.$message.success('密码修改成功')
+          // 调用取消重置
+          this.cancelForm()
         }
       })
+    },
+
+    // 取消重置密码
+    cancelForm() {
+      this.$refs.passwordForm.resetFields() // 重置表单
+      this.showDialog = false // 关闭盒子
     }
   }
 }
