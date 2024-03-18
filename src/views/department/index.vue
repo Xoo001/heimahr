@@ -7,7 +7,7 @@
           <!-- 节点结构 -->
           <el-row style="width: 100%; height: 40px;" type="flex" justify="space-between" align="middle">
             <el-col>{{ data.name }}</el-col>
-            <el-col :span="4">
+            <el-col :span="6">
               <span class="tree-manger">{{ data.managerName }}</span>
               <!-- 下拉菜单 -->
               <el-dropdown>
@@ -29,24 +29,29 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department'
+
 export default {
   name: 'Department',
+
   data() {
     return {
-      depts: [
-        {
-          name: '传智教育',
-          managerName: '管理员',
-          children: [
-            { name: '总裁办', managerName: '张三' },
-            { name: '行政部', managerName: '里斯', children: [{ name: '行政部子部门', managerName: '管理员' }] }
-          ]
-        }
-      ], // 数据属性
+      depts: [], // 数据属性
       defaultProps: {
         label: 'name', // 要显示的字段名
         children: 'children'
       }
+    }
+  },
+
+  created() {
+    this.getDepartment()
+  },
+
+  methods: {
+    async getDepartment() {
+      const res = await getDepartment()
+      this.depts = res
     }
   }
 }
@@ -58,7 +63,7 @@ export default {
   font-size: 14px;
 
   & .tree-manger {
-    width: 50px;
+    width: 100px;
     display: inline-block;
     margin: 10px;
   }
