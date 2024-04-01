@@ -1,6 +1,31 @@
 <template>
   <el-dialog title="新增部门" :visible="showDialog" @close="closeDialog">
-    123
+    <!-- 表单结构 -->
+    <el-form label-width="120px" size="mini" style="width: 80%;">
+      <el-form-item label="部门名称">
+        <el-input placeholder="2-10个字符" />
+      </el-form-item>
+      <el-form-item label="部门编码">
+        <el-input placeholder="2-10个字符" />
+      </el-form-item>
+      <el-form-item label="部门负责人">
+        <el-select placeholder="请选择负责人" style="width: 100%;">
+          <el-option>123</el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="部门介绍">
+        <el-input type="textarea" placeholder="1-100个字符" maxlength="100" rows="4" />
+      </el-form-item>
+      <el-form-item>
+        <!-- 按钮 -->
+        <el-row type="flex" justify="center">
+          <el-col :span="12">
+            <el-button type="primary">确认</el-button>
+            <el-button>取消</el-button>
+          </el-col>
+        </el-row>
+      </el-form-item>
+    </el-form>
   </el-dialog>
 </template>
 
@@ -12,6 +37,7 @@ export default {
       default: false
     }
   },
+
   methods: {
     closeDialog() {
       // 改变父级组件的数据

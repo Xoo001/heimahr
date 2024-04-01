@@ -67,7 +67,7 @@ export default {
 
     // 操作部门的方法
     operateDept(type) {
-      console.log(type)
+      // console.log(type)
       // 添加子部门
       if (type === 'add') {
         this.showDialog = true
