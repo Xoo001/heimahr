@@ -60,7 +60,7 @@ export default {
     async getDepartment() {
       const res = await getDepartment()
       // this.depts = res
-      // console.log(res)
+      console.log(res)
       // 树形结构 递归
       this.depts = transListToTreeData(res, 0)
     },

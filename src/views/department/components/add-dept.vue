@@ -10,7 +10,7 @@
       </el-form-item>
       <el-form-item label="部门负责人" prop="managerId">
         <el-select v-model="formData.managerId" placeholder="请选择负责人" style="width: 80%;" size="mini">
-          <el-option label="123" />
+          <el-option label="123" value="123" />
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { getDepartment } from '@/api/department'
 export default {
   props: {
     showDialog: {
@@ -49,7 +50,21 @@ export default {
       rules: {
         code: [
           { required: true, message: '部门编码不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '部门编码的长度为2-10个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '部门编码的长度为2-10个字符', trigger: 'blur' },
+          {
+            trigger: 'blur',
+            // 自定义校验
+            validator: async(rule, value, callback) => {
+              // value就是编码
+              // 获取组织架构数据
+              const result = await getDepartment()
+              if (result.some(ele => ele.code === value)) {
+                callback(new Error('编码不能重复'))
+              } else {
+                callback()
+              }
+            }
+          }
         ],
         introduce: [
           { required: true, message: '部门介绍不能为空', trigger: 'blur' },
@@ -60,7 +75,20 @@ export default {
         ],
         name: [
           { required: true, message: '部门名称不能为空', trigger: 'blur' },
-          { min: 2, max: 10, message: '部门名称的长度为2-10个字符', trigger: 'blur' }
+          { min: 2, max: 10, message: '部门名称的长度为2-10个字符', trigger: 'blur' },
+          {
+            trigger: 'blur',
+            // 自定义校验
+            validator: async(rule, value, callback) => {
+              const result = await getDepartment()
+              if (result.some(ele => ele.name === value)) {
+                callback(new Error('名称不能重复'))
+              } else {
+                callback()
+              }
+            }
+          }
+
         ]
       }
     }
