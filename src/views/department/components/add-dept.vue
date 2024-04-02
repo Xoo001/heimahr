@@ -10,7 +10,7 @@
       </el-form-item>
       <el-form-item label="部门负责人" prop="managerId">
         <el-select v-model="formData.managerId" placeholder="请选择负责人" style="width: 80%;" size="mini">
-          <el-option label="123" value="123" />
+          <el-option v-for="item in managerList" :key="item.id" :label="item.username" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="部门介绍" prop="introduce">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department'
+import { getDepartment, getUserSimple } from '@/api/department'
 export default {
   props: {
     showDialog: {
@@ -38,8 +38,10 @@ export default {
       default: false
     }
   },
+
   data() {
     return {
+      managerList: [], // 负责人列表数据
       formData: {
         code: '', // 部门编码
         introduce: '', // 部门介绍
@@ -94,10 +96,20 @@ export default {
     }
   },
 
+  created() {
+    this.getUserSimple()
+  },
+
   methods: {
     closeDialog() {
       // 改变父级组件的数据
       this.$emit('update:show-dialog', false)
+    },
+    // 显示负责人数据
+    async getUserSimple() {
+      // 调用接口
+      const result = await getUserSimple()
+      this.managerList = result
     }
   }
 }
