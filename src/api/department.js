@@ -10,3 +10,8 @@ export const getDepartment = () => {
 export const getUserSimple = () => {
   return request.get('/sys/user/simple')
 }
+
+// 新增部门
+export const addDepartment = (data) => {
+  return request.post('/company/department', data)
+}

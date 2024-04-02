@@ -26,7 +26,7 @@
       </el-tree>
     </div>
     <!-- 弹出层Dialog -->
-    <AddDept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" />
+    <AddDept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
 
@@ -42,7 +42,7 @@ export default {
 
   data() {
     return {
-      currentNodeId: '', // 点击的ID
+      currentNodeId: null, // 点击的ID
       depts: [], // 数据属性
       defaultProps: {
         label: 'name', // 要显示的字段名
@@ -61,15 +61,15 @@ export default {
     async getDepartment() {
       const res = await getDepartment()
       // this.depts = res
-      console.log(res)
+      // console.log(res)
       // 树形结构 递归
       this.depts = transListToTreeData(res, 0)
     },
 
     // 操作部门的方法
     operateDept(type, id) {
-      console.log(type)
-      console.log(id)
+      // console.log(type)
+      // console.log(id)
       // 添加子部门
       if (type === 'add') {
         this.showDialog = true

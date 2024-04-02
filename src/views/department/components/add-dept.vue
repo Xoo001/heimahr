@@ -20,8 +20,8 @@
         <!-- 按钮 -->
         <el-row type="flex" justify="center">
           <el-col :span="12">
-            <el-button type="primary">确认</el-button>
-            <el-button>取消</el-button>
+            <el-button type="primary" @click="addDept">确认</el-button>
+            <el-button @click="closeDialog">取消</el-button>
           </el-col>
         </el-row>
       </el-form-item>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getDepartment, getUserSimple } from '@/api/department'
+import { getDepartment, getUserSimple, addDepartment } from '@/api/department'
 export default {
   props: {
     showDialog: {
@@ -107,6 +107,8 @@ export default {
 
   methods: {
     closeDialog() {
+      // 重置表单
+      this.$refs.addDept.resetFields()
       // 改变父级组件的数据
       this.$emit('update:show-dialog', false)
     },
@@ -115,6 +117,23 @@ export default {
       // 调用接口
       const result = await getUserSimple()
       this.managerList = result
+    },
+    // 表单验证
+    addDept() {
+      this.$refs.addDept.validate(async flag => {
+        // console.log(flag)
+        // console.log(this.currentNodeId)
+        if (flag) {
+          this.formData.pid = this.currentNodeId
+          // 表单验证成功，调用接口传入表单信息
+          await addDepartment(this.formData)
+          // 通知父组件更新
+          this.$emit('updateDepartment')
+          // 提示信息重置表单关闭弹窗
+          this.$message.success('新增部门成功')
+          this.closeDialog()
+        }
+      })
     }
   }
 }
