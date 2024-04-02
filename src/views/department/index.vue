@@ -10,7 +10,7 @@
             <el-col :span="6">
               <span class="tree-manger">{{ data.managerName }}</span>
               <!-- 下拉菜单 -->
-              <el-dropdown @command="operateDept">
+              <el-dropdown @command="operateDept($event,data.id)">
                 <span>
                   操作<i class="el-icon-arrow-down el-icon--right" />
                 </span>
@@ -26,7 +26,7 @@
       </el-tree>
     </div>
     <!-- 弹出层Dialog -->
-    <AddDept :show-dialog.sync="showDialog" />
+    <AddDept :current-node-id="currentNodeId" :show-dialog.sync="showDialog" />
   </div>
 </template>
 
@@ -42,6 +42,7 @@ export default {
 
   data() {
     return {
+      currentNodeId: '', // 点击的ID
       depts: [], // 数据属性
       defaultProps: {
         label: 'name', // 要显示的字段名
@@ -66,11 +67,13 @@ export default {
     },
 
     // 操作部门的方法
-    operateDept(type) {
-      // console.log(type)
+    operateDept(type, id) {
+      console.log(type)
+      console.log(id)
       // 添加子部门
       if (type === 'add') {
         this.showDialog = true
+        this.currentNodeId = id
       }
     }
   }

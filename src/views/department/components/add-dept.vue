@@ -36,6 +36,11 @@ export default {
     showDialog: {
       type: Boolean,
       default: false
+    },
+    // 父级id
+    currentNodeId: {
+      type: Number,
+      default: null
     }
   },
 
