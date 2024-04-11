@@ -12,6 +12,11 @@ export const getUserSimple = () => {
 }
 
 // 新增部门
-export const addDepartment = (data) => {
+export const addDepartment = data => {
   return request.post('/company/department', data)
+}
+
+// 获取部门详情
+export const getDepartmentDetail = id => {
+  return request.get(`/company/department/${id}`)
 }

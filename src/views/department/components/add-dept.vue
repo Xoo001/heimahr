@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible="showDialog" @close="closeDialog">
+  <el-dialog :title="departmentName" :visible="showDialog" @close="closeDialog">
     <!-- 表单结构 -->
     <el-form ref="addDept" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
@@ -30,17 +30,22 @@
 </template>
 
 <script>
-import { getDepartment, getUserSimple, addDepartment } from '@/api/department'
+import { getDepartment, getUserSimple, addDepartment, getDepartmentDetail } from '@/api/department'
 export default {
   props: {
     showDialog: {
       type: Boolean,
       default: false
     },
-    // 父级id
+    // 点击的id
     currentNodeId: {
       type: Number,
       default: null
+    },
+    // 组件名称
+    departmentName: {
+      type: String,
+      default: ''
     }
   },
 
@@ -134,6 +139,13 @@ export default {
           this.closeDialog()
         }
       })
+    },
+    // 获取组织详情
+    async getDepartmentDetail() {
+      // 调用接口
+      this.formData = await getDepartmentDetail(this.currentNodeId)
+      // console.log(res)
+      // 信息赋值给表单信息
     }
   }
 }
