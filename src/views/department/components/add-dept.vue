@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="departmentName" :visible="showDialog" @close="closeDialog">
+  <el-dialog title="新增部门" :visible="showDialog" @close="closeDialog">
     <!-- 表单结构 -->
     <el-form ref="addDept" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
@@ -41,11 +41,6 @@ export default {
     currentNodeId: {
       type: Number,
       default: null
-    },
-    // 组件名称
-    departmentName: {
-      type: String,
-      default: ''
     }
   },
 
@@ -69,7 +64,12 @@ export default {
             validator: async(rule, value, callback) => {
               // value就是编码
               // 获取组织架构数据
-              const result = await getDepartment()
+              let result = await getDepartment()
+              // 判断是否是编辑模式
+              if (this.formData.id) {
+                // 排除自身
+                result = result.filter(ele => ele.id !== this.formData.id)
+              }
               if (result.some(ele => ele.code === value)) {
                 callback(new Error('编码不能重复'))
               } else {
@@ -92,7 +92,12 @@ export default {
             trigger: 'blur',
             // 自定义校验
             validator: async(rule, value, callback) => {
-              const result = await getDepartment()
+              let result = await getDepartment()
+              // 判断是否是编辑模式
+              if (this.formData.id) {
+                // 排除自身
+                result = result.filter(ele => ele.id !== this.formData.id)
+              }
               if (result.some(ele => ele.name === value)) {
                 callback(new Error('名称不能重复'))
               } else {

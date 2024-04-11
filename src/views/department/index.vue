@@ -26,7 +26,7 @@
       </el-tree>
     </div>
     <!-- 弹出层Dialog -->
-    <AddDept ref="addDept" :department-name="departmentName" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
+    <AddDept ref="addDept" :current-node-id="currentNodeId" :show-dialog.sync="showDialog" @updateDepartment="getDepartment" />
   </div>
 </template>
 
@@ -73,11 +73,9 @@ export default {
       // console.log(id)
       // 添加子部门
       if (type === 'add') {
-        this.departmentName = '新增部门'
         this.currentNodeId = id
         this.showDialog = true
       } else if (type === 'edit') {
-        this.departmentName = '编辑部门'
         this.currentNodeId = id
         this.showDialog = true
         // 回显数据 注意：直接调用组件方法是同步的方法，数据赋值是异步动作
