@@ -20,3 +20,8 @@ export const addDepartment = data => {
 export const getDepartmentDetail = id => {
   return request.get(`/company/department/${id}`)
 }
+
+// 更新部门详情
+export const updateDepartmentDetail = data => {
+  return request.put(`/company/department/${data.id}`, data)
+}

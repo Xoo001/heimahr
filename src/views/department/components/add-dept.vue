@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="新增部门" :visible="showDialog" @close="closeDialog">
+  <el-dialog :title="formData.id ? '编辑部门' : '添加部门'" :visible="showDialog" @close="closeDialog">
     <!-- 表单结构 -->
     <el-form ref="addDept" :model="formData" :rules="rules" label-width="120px">
       <el-form-item label="部门名称" prop="name">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { getDepartment, getUserSimple, addDepartment, getDepartmentDetail } from '@/api/department'
+import { getDepartment, getUserSimple, addDepartment, getDepartmentDetail, updateDepartmentDetail } from '@/api/department'
 export default {
   props: {
     showDialog: {
@@ -117,6 +117,13 @@ export default {
 
   methods: {
     closeDialog() {
+      this.formData = {
+        code: '', // 部门编码
+        introduce: '', // 部门介绍
+        managerId: '', // 部门负责人名字
+        name: '', // 部门名称
+        pid: '' // 部门父级部门id
+      }
       // 重置表单
       this.$refs.addDept.resetFields()
       // 改变父级组件的数据
@@ -130,17 +137,28 @@ export default {
     },
     // 表单验证
     addDept() {
-      this.$refs.addDept.validate(async flag => {
+      this.$refs.addDept.validate(async isOk => {
         // console.log(flag)
         // console.log(this.currentNodeId)
-        if (flag) {
-          this.formData.pid = this.currentNodeId
-          // 表单验证成功，调用接口传入表单信息
-          await addDepartment(this.formData)
-          // 通知父组件更新
-          this.$emit('updateDepartment')
-          // 提示信息重置表单关闭弹窗
-          this.$message.success('新增部门成功')
+        if (isOk) {
+          if (this.formData.id) {
+            // 编辑场景
+            // console.log('编辑')
+            await updateDepartmentDetail(this.formData)
+            // 通知父组件更新
+            this.$emit('updateDepartment')
+            // 提示信息重置表单关闭弹窗
+            this.$message.success('编辑部门成功')
+          } else {
+            // 添加场景
+            this.formData.pid = this.currentNodeId
+            // 表单验证成功，调用接口传入表单信息
+            await addDepartment(this.formData)
+            // 通知父组件更新
+            this.$emit('updateDepartment')
+            // 提示信息重置表单关闭弹窗
+            this.$message.success('新增部门成功')
+          }
           this.closeDialog()
         }
       })
