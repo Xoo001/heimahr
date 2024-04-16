@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import { getDepartment } from '@/api/department'
+import { deleteDepartmentDetail, getDepartment } from '@/api/department'
 import { transListToTreeData } from '@/utils'
 import AddDept from './components/add-dept.vue'
 
@@ -68,7 +68,7 @@ export default {
     },
 
     // 操作部门的方法
-    operateDept(type, id) {
+    async operateDept(type, id) {
       // console.log(type)
       // console.log(id)
       // 添加子部门
@@ -81,6 +81,19 @@ export default {
         // 回显数据 注意：直接调用组件方法是同步的方法，数据赋值是异步动作
         this.$nextTick(() => {
           this.$refs.addDept.getDepartmentDetail() // 等同于子组件的this
+        })
+      } else {
+        // console.log('删除')
+        // console.log(id)
+        this.$confirm('你确定要删除改部门吗？', '标题', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+          // console.log('删除')
+          await deleteDepartmentDetail(id)
+          this.$message.success('删除成功')
+          this.getDepartment()
         })
       }
     }

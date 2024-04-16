@@ -25,3 +25,8 @@ export const getDepartmentDetail = id => {
 export const updateDepartmentDetail = data => {
   return request.put(`/company/department/${data.id}`, data)
 }
+
+// 删除部门详情
+export const deleteDepartmentDetail = id => {
+  return request.delete(`/company/department/${id}`)
+}
