@@ -6,3 +6,10 @@ export const getRoleList = (page, pagesize) => {
     params: { page, pagesize }
   })
 }
+
+// 添加角色接口
+export const addRole = ({ name, description, state }) => {
+  return requset.post('/sys/role', {
+    name, description, state
+  })
+}

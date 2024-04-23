@@ -3,7 +3,7 @@
     <div class="app-container">
       <!-- 角色管理 -->
       <div class="role-operate">
-        <el-button type="primary" size="mini">添加角色</el-button>
+        <el-button type="primary" size="mini" @click="showDialog = true">添加角色</el-button>
       </div>
       <!-- 表格组件 -->
       <el-table :data="tableDate" border style="width: 100%;">
@@ -35,19 +35,26 @@
         />
       </el-row>
     </div>
+    <!-- 弹出层 -->
+    <addRole :show-dialog.sync="showDialog" />
   </div>
 </template>
 
 <script>
 import { getRoleList } from '@/api/role'
+import addRole from './components/add-role.vue'
 export default {
   name: 'Role',
+  components: {
+    addRole
+  },
   data() {
     return {
       page: 1, // 当前页码数
-      pagesize: 10, // 当前页面需要的数据条数
+      pagesize: 5, // 当前页面需要的数据条数
       tableDate: [], // 角色列表数据
-      total: 0 // 总数
+      total: 0, // 总数
+      showDialog: true // 对话框显示隐藏
     }
   },
   created() {
