@@ -36,7 +36,7 @@
       </el-row>
     </div>
     <!-- 弹出层 -->
-    <addRole :show-dialog.sync="showDialog" />
+    <addRole :show-dialog.sync="showDialog" @updateRole="getRoleList()" />
   </div>
 </template>
 
