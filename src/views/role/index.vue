@@ -31,8 +31,8 @@
         <el-table-column label="操作">
           <template v-slot="{row}">
             <div v-if="row.isEdit">
-              <el-button type="primary" size="mini">确认</el-button>
-              <el-button size="mini" @click="callEdit(row)">取消</el-button>
+              <el-button type="primary" size="mini" @click="btnChangeRow(row)">确认</el-button>
+              <el-button size="mini" @click="row.isEdit = false">取消</el-button>
             </div>
             <div v-else>
               <el-button type="text">分配权限</el-button>
@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { getRoleList } from '@/api/role'
+import { editRole, getRoleList } from '@/api/role'
 import addRole from './components/add-role.vue'
 export default {
   name: 'Role',
@@ -96,7 +96,8 @@ export default {
         this.$set(item, 'editRow', {
           name: item.name,
           description: item.description,
-          state: item.state
+          state: item.state,
+          id: item.id
         })
       })
     },
@@ -107,7 +108,7 @@ export default {
     },
     // 编辑方法
     btnEditRow(row) {
-      console.log(row)
+      // console.log(row)
       // 显示编辑内容
       row.isEdit = true
       // 更新缓存数据
@@ -115,9 +116,22 @@ export default {
       row.editRow.description = row.description
       row.editRow.state = row.state
     },
-    // 取消编辑
-    callEdit(row) {
-      row.isEdit = false
+    // 确认编辑调用接口
+    async btnChangeRow(row) {
+      // 检查是否必填 -- 更新接口 -- 退出编辑
+      if (row.editRow.name && row.editRow.description) {
+        await editRole(row.editRow)
+        this.$message.success('角色修改成功')
+        // row.name = row.editRow.name
+        // row.isEdit = false // eslint的校验 误判
+        // Object.assign(target,source)原来的对象和需要修改的值
+        Object.assign(row, {
+          ...row.editRow,
+          isEdit: false
+        })
+      } else {
+        this.$message.warning('内容不能为空')
+      }
     }
   }
 

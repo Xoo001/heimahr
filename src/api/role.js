@@ -13,3 +13,8 @@ export const addRole = ({ name, description, state }) => {
     name, description, state
   })
 }
+
+// 修改角色接口
+export const editRole = editRow => {
+  return requset.put(`/sys/role/${editRow.id}`, editRow)
+}
