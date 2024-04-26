@@ -30,15 +30,18 @@
         </el-table-column>
         <el-table-column label="操作">
           <template v-slot="{row}">
-            <div v-if="row.isEdit">
+            <template v-if="row.isEdit">
               <el-button type="primary" size="mini" @click="btnChangeRow(row)">确认</el-button>
               <el-button size="mini" @click="row.isEdit = false">取消</el-button>
-            </div>
-            <div v-else>
+            </template>
+            <template v-else>
               <el-button type="text">分配权限</el-button>
               <el-button type="text" @click="btnEditRow(row)">编辑</el-button>
-              <el-button type="text">删除</el-button>
-            </div>
+              <!-- 气泡框 -->
+              <el-popconfirm title="这是一段内容确定删除吗？" @onConfirm="confirmDel(row.id)">
+                <el-button slot="reference" type="text" style="margin-left: 10px;">删除</el-button>
+              </el-popconfirm>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -59,7 +62,7 @@
 </template>
 
 <script>
-import { editRole, getRoleList } from '@/api/role'
+import { editRole, getRoleList, delRole } from '@/api/role'
 import addRole from './components/add-role.vue'
 export default {
   name: 'Role',
@@ -132,6 +135,16 @@ export default {
       } else {
         this.$message.warning('内容不能为空')
       }
+    },
+    // 删除数据
+    async confirmDel(id) {
+      await delRole(id)
+      this.$message.success('恭喜你，删除成功')
+      // 更新视图：区分删除的数据是不是最后一个，如果是渲染前一页
+      if (this.tableDate.length === 1) {
+        this.page--
+      }
+      this.getRoleList()
     }
   }
 
