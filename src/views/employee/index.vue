@@ -15,11 +15,20 @@
         <!-- 表格组件 -->
         <el-table :data="list">
           <el-table-column type="selection" />
-          <el-table-column label="头像" align="center" prop="staffPhoto" />
+          <el-table-column label="头像" align="center">
+            <template v-slot="{ row }">
+              <el-avatar v-if="row.staffPhoto" :size="30" :src="row.staffPhoto" />
+              <el-avatar v-else :size="30" class="username">{{ row.username.charAt(0) }}</el-avatar>
+            </template>
+          </el-table-column>
           <el-table-column label="姓名" prop="username" />
           <el-table-column label="手机号" sortable prop="mobile" />
           <el-table-column label="工号" sortable prop="workNumber" />
-          <el-table-column label="聘用形式" prop="formOfEmployment" />
+          <el-table-column label="聘用形式">
+            <template v-slot="{ row }">
+              {{ row.formOfEmployment === 1 ? '正式':'非正式' }}
+            </template>
+          </el-table-column>
           <el-table-column label="部门" prop="departmentName" />
           <el-table-column label="入职时间" sortable prop="timeOfEntry" />
           <el-table-column label="操作" width="180px">
@@ -96,32 +105,32 @@ export default {
 }
 </script>
 
-  <style lang="scss" scoped>
-.app-container {
-  background: #fff;
-  display: flex;
-  .left {
-    width: 280px;
-    padding: 20px;
-    border-right: 1px solid #eaeef4;
-  }
-  .right {
-    flex: 1;
-    padding: 20px;
-    .opeate-tools {
-      margin:10px ;
+<style lang="scss" scoped>
+  .app-container {
+    background: #fff;
+    display: flex;
+    .left {
+      width: 280px;
+      padding: 20px;
+      border-right: 1px solid #eaeef4;
     }
-    .username {
-      height: 30px;
-      width: 30px;
-      line-height: 30px;
-      text-align: center;
-      border-radius: 50%;
-      color: #fff;
-      background: #04C9BE;
-      font-size: 12px;
-      display:inline-block;
+    .right {
+      flex: 1;
+      padding: 20px;
+      .opeate-tools {
+        margin:10px ;
+      }
+      .username {
+        height: 30px;
+        width: 30px;
+        line-height: 30px;
+        text-align: center;
+        border-radius: 50%;
+        color: #fff;
+        background: #04C9BE;
+        font-size: 12px;
+        display:inline-block;
+      }
     }
   }
-}
-  </style>
+</style>
