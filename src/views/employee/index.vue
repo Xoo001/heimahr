@@ -41,7 +41,7 @@
         </el-table>
         <!-- 分页 -->
         <el-row style="height: 60px;" type="flex" justify="end" align="middle">
-          <el-pagination layout="total, prev, pager, next" :total="50" />
+          <el-pagination :current-page="queryParams.page" :page-size="queryParams.pagesize" layout="total, prev, pager, next" :total="total" @current-change="pageJump" />
         </el-row>
       </div>
     </div>
@@ -62,11 +62,12 @@ export default {
         label: 'name'
       },
       queryParams: {
-        departmentId: null // 部门id,根据部门查询当前部门及子部门的用户
-        // page: 1, // 当前页码数
-        // pagesize: 10 // 当前页面需要的数据条数
+        departmentId: null, // 部门id,根据部门查询当前部门及子部门的用户
+        page: 1, // 当前页码数
+        pagesize: 10 // 当前页面需要的数据条数
       },
-      list: [] // 员工列表数据
+      list: [], // 员工列表数据
+      total: 0 // 记录员工的总数
     }
   },
   created() {
@@ -91,14 +92,22 @@ export default {
     selectNode(node) {
       // console.log(node.id)
       // 记录点击的组织部门
-      this.queryParams.departmentId = node.id
+      this.queryParams.departmentId = node.id // 记录部门id
+      this.queryParams.page = 1 // 设置第一页
       this.getEmployeeList(this.queryParams)
     },
     // 获取员工列表数据
     async getEmployeeList() {
-      const { rows } = await getEmployeeList(this.queryParams)
+      const { rows, total } = await getEmployeeList(this.queryParams)
       this.list = rows
+      this.total = total
       console.log(rows)
+    },
+    // 分页跳转
+    pageJump(newPage) {
+      // console.log(newPage)
+      this.queryParams.page = newPage
+      this.getEmployeeList()
     }
   }
 
