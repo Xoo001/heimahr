@@ -2,9 +2,26 @@
   <div class="container">
     <div class="app-container">
       <div class="left">
-        <el-input style="margin-bottom:10px" type="text" prefix-icon="el-icon-search" size="small" placeholder="输入员工姓名全员搜索" />
+        <el-input
+          v-model="queryParams.keyword"
+          style="margin-bottom:10px"
+          type="text"
+          prefix-icon="el-icon-search"
+          size="small"
+          placeholder="输入员工姓名全员搜索"
+          @input="changeValue"
+        />
         <!-- 树形组件 -->
-        <el-tree ref="depts" node-key="id" :data="treeData" :props="defaultProps" default-expand-all :expand-on-click-node="false" highlight-current @node-click="selectNode" />
+        <el-tree
+          ref="depts"
+          node-key="id"
+          :data="treeData"
+          :props="defaultProps"
+          default-expand-all
+          :expand-on-click-node="false"
+          highlight-current
+          @node-click="selectNode"
+        />
       </div>
       <div class="right">
         <el-row class="opeate-tools" type="flex" justify="end">
@@ -41,7 +58,13 @@
         </el-table>
         <!-- 分页 -->
         <el-row style="height: 60px;" type="flex" justify="end" align="middle">
-          <el-pagination :current-page="queryParams.page" :page-size="queryParams.pagesize" layout="total, prev, pager, next" :total="total" @current-change="pageJump" />
+          <el-pagination
+            :current-page="queryParams.page"
+            :page-size="queryParams.pagesize"
+            layout="total, prev, pager, next"
+            :total="total"
+            @current-change="pageJump"
+          />
         </el-row>
       </div>
     </div>
@@ -62,6 +85,7 @@ export default {
         label: 'name'
       },
       queryParams: {
+        keyword: '', // 根据名字模糊查询
         departmentId: null, // 部门id,根据部门查询当前部门及子部门的用户
         page: 1, // 当前页码数
         pagesize: 10 // 当前页面需要的数据条数
@@ -94,20 +118,31 @@ export default {
       // 记录点击的组织部门
       this.queryParams.departmentId = node.id // 记录部门id
       this.queryParams.page = 1 // 设置第一页
-      this.getEmployeeList(this.queryParams)
+      this.getEmployeeList()
     },
     // 获取员工列表数据
     async getEmployeeList() {
       const { rows, total } = await getEmployeeList(this.queryParams)
       this.list = rows
       this.total = total
-      console.log(rows)
+      // console.log(rows)
     },
     // 分页跳转
     pageJump(newPage) {
       // console.log(newPage)
       this.queryParams.page = newPage
       this.getEmployeeList()
+    },
+    // 模糊搜索
+    changeValue() {
+      // 单位时间之内只执行最后一次
+      // this的实例上赋值一个timer属性
+      // 防抖
+      clearTimeout(this.timer)
+      this.timer = setTimeout(() => {
+        this.queryParams.page = 1
+        this.getEmployeeList()
+      }, 300)
     }
   }
 
