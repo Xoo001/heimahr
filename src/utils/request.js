@@ -5,7 +5,7 @@ import { Message } from 'element-ui'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // 基础地址
-  timeout: 10000
+  timeout: 30000
 }) // 创建一个axios实力
 
 // 请求拦截器 注入token
@@ -24,6 +24,8 @@ service.interceptors.request.use(function(config) {
 // 响应拦截器
 service.interceptors.response.use(function(response) {
   // 2xx 范围内的状态码都会触发该函数。
+  // 二进制流进行判断
+  if (response.data instanceof Blob) return response.data
   const { success, data, message } = response.data
   // 对响应数据做点什么
   if (success) {
