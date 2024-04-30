@@ -16,3 +16,8 @@ export const exportEmployee = () => {
 export const downloadExcel = () => {
   return request.get('/sys/user/import/template', { responseType: 'blob' })
 }
+
+// 上传用户表格
+export const updateExcel = data => {
+  return request.post('/sys/user/import', data)
+}

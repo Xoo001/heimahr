@@ -12,12 +12,13 @@
           class="excel-upload-input"
           type="file"
           accept=".xlsx, .xls"
+          @change="uploadChange"
         >
         <div class="drop">
           <i class="el-icon-upload" />
           <el-button type="text" @click="downloadExcel">下载导入模板</el-button>
           <span>将文件拖到此处或
-            <el-button type="text">点击上传</el-button>
+            <el-button type="text" @click="handleUpload">点击上传</el-button>
           </span>
         </div>
       </div>
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { downloadExcel } from '@/api/employee'
+import { downloadExcel, updateExcel } from '@/api/employee'
 import FileSaver from 'file-saver'
 export default {
   props: {
@@ -45,6 +46,38 @@ export default {
       const result = await downloadExcel()
       // console.log(result)
       FileSaver.saveAs(result, '员工信息模版.xlsx')
+    },
+    // 弹出文本选择器上传文件
+    handleUpload() {
+      // 弹出文本选择框
+      this.$refs['excel-upload-input'].click()
+    },
+    // 监听输入框改变事件
+    async uploadChange(e) {
+      const files = e.target.files
+      // 如果大于0说明有数据需要上传
+      if (files.length > 0) {
+        const data = new FormData()
+        data.append('file', files[0])
+        try {
+          // 参数是formdata类型 需要参数加入formdata类型中 file:file
+          await updateExcel(data)
+          // 成功导入数据
+          this.$message.success('批量导入员工成功')
+          // 通知父组件更新数据
+          this.$emit('updataList')
+          // 关闭弹窗
+          this.$emit('update:showExcelDialog', false)
+        } catch (error) {
+          // 失败捕捉
+          // this.$refs['excel-upload-input'].value = ''
+          // console.log(this.$refs['excel-upload-input'].value)
+        } finally {
+          // 无论成功失败都会执行此代码
+          // 成功/失败清除选择器选择的内容方便重新选择
+          this.$refs['excel-upload-input'].value = ''
+        }
+      }
     }
   }
 }

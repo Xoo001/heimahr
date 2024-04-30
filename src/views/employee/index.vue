@@ -69,7 +69,7 @@
       </div>
     </div>
     <!-- 对话框 -->
-    <ImportExcelVue :show-excel-dialog.sync="showExcelDialog" />
+    <ImportExcelVue :show-excel-dialog.sync="showExcelDialog" @updataList="updataList" />
   </div>
 </template>
 
@@ -160,6 +160,10 @@ export default {
       // 使用一个npm包，直接将blob文件下载到本地 file-saver
       // FileSaver.saveAs(blob,文件格式)
       FileSaver.saveAs(res, '员工信息表.xlsx')// 导出表格
+    },
+    // 更新数据
+    updataList() {
+      this.getEmployeeList()
     }
   }
 
