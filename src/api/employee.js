@@ -11,3 +11,8 @@ export const getEmployeeList = params => {
 export const exportEmployee = () => {
   return request.get('/sys/user/export', { responseType: 'blob' })
 }
+
+// 下载表格模版
+export const downloadExcel = () => {
+  return request.get('/sys/user/import/template', { responseType: 'blob' })
+}
